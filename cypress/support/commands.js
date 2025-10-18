@@ -10,12 +10,7 @@ Cypress.Commands.add('login', (country = 'br', user, password) => {
   if (!finalUser || !finalPassword) {
     throw new Error(`⚠️ Missing credentials for country: ${country}`)
   }
-
-  cy.visit('/sign-in')
-  cy.wait(1000)
-
-  // cy.selectCountry(country)
-
+  
   cy.get('input[data-testid="sign-in-username-input"]').type(finalUser)
   cy.get('#password').type(finalPassword, { log: false })
 
@@ -34,6 +29,5 @@ Cypress.Commands.add('selectCountry', (country) => {
     const select = win.document.querySelector('select[aria-hidden="true"]')
     select.value = country
     select.dispatchEvent(new Event('change', { bubbles: true }))
-
   })
 })

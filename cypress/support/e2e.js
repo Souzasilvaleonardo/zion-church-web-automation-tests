@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import './radomCpf'
 
 Cypress.on('uncaught:exception', (err) => {
   // Ignora os erros de redirecionamento do Next.js
