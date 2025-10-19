@@ -10,7 +10,7 @@ Cypress.Commands.add('login', (country = 'br', user, password) => {
   if (!finalUser || !finalPassword) {
     throw new Error(`⚠️ Missing credentials for country: ${country}`)
   }
-  
+
   cy.get('input[data-testid="sign-in-username-input"]').type(finalUser)
   cy.get('#password').type(finalPassword, { log: false })
 
@@ -30,4 +30,19 @@ Cypress.Commands.add('selectCountry', (country) => {
     select.value = country
     select.dispatchEvent(new Event('change', { bubbles: true }))
   })
+})
+
+Cypress.Commands.add('selectMaritalStatus', (maritalStatus) => {
+  cy.get('#maritalStatus').click()
+
+  cy.window().then((win) => {  
+    const selects = win.document.querySelectorAll('select[aria-hidden="true"]')
+    const select = selects[1]
+    if(!select) {
+      throw new Error('⚠️ Nenhum select encontrado no índice 1')
+    }
+    select.value = maritalStatus
+    select.dispatchEvent(new Event('change', { bubbles: true }))
+  })
+  cy.get('body').click(0, 0, { force: true })
 })

@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 Cypress.Commands.add('generateCPF', () => {
   function randomDigit() {
     return Math.floor(Math.random() * 9)
