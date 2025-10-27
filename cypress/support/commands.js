@@ -42,9 +42,7 @@ Cypress.Commands.add('registerUser', () => {
       cy.get("#email").type(emailFaker);
       cy.contains("Próximo").click();
 
-      cy.contains("h1", "Conte-nos um pouco mais sobre você.").should(
-        "be.visible"
-      );
+      cy.contains("h1", "Conte-nos um pouco mais sobre você.").should("be.visible");
       cy.get("#fullname").type(nameFaker);
       cy.get("#phone").type(numberFaker);
       cy.contains("Masculino").click();
@@ -57,54 +55,67 @@ Cypress.Commands.add('registerUser', () => {
       cy.get("#street").invoke("val").should("not.be.empty");
       cy.contains("Próximo").click();
 
-      cy.contains("h1", "Nos fale sobre a sua jornada cristã.").should(
-        "be.visible"
-      );
+      // Jornada Cristã
+      cy.contains("h1", "Nos fale sobre a sua jornada cristã.").should("be.visible");
       cy.get('span[id="is-baptized-yes"]').click();
-
-      cy.contains("label", "Seu batismo foi por aspersão ou imersão?").should(
-        "be.visible"
-      );
+      cy.contains("label", "Seu batismo foi por aspersão ou imersão?").should("be.visible");
       cy.get('span[id="baptism-type-immersion"]').click();
-      cy.get('div[id="baptism-year-picker"]').click();
-      cy.get('button[role="combobox"]').should("be.visible").click();
-      cy.get(
-        '[role="listbox"], [data-radix-popper-content], [aria-labelledby]'
-      ).should("be.visible");
-      cy.contains("div, button, span", "2016", { timeout: 5000 })
-        .scrollIntoView()
-        .click({ force: true });
-      cy.get("body").click(0, 0, { force: true });
+      cy.get('button[role="combobox"]').should("be.visible").click({ force: true });
 
-      cy.contains("label", "Você é batizado no espírito santo?").should(
-        "be.visible"
-      );
+      cy.window().then((win) => {
+        const blocked = win.document.querySelector('span[style*="pointer-events: none"]');
+        if (blocked) blocked.style.pointerEvents = 'auto';
+
+        const option = [...win.document.querySelectorAll('[role="option"], span, div, button')]
+          .find(el => el.textContent.trim() === '2016');
+
+        if (option) {
+          option.click(); // dispara o clique real que o React captura
+          option.dispatchEvent(new win.Event('change', { bubbles: true }));
+        }
+      });
+      cy.get("body").click(0, 0, { force: true });
+      cy.get('button[role="combobox"]').should('contain.text', '2016');
+
+      cy.contains("label", "Você é batizado no espírito santo?").should("be.visible");
       cy.get('span[id="is-baptized-holy-spirit-yes"]').click();
-      cy.get('div[id="baptized-holy-spirit-year-picker"]').click();
-      cy.get('button[role="combobox"]').should("be.visible").click();
-      cy.get(
-        '[role="listbox"], [data-radix-popper-content], [aria-labelledby]'
-      ).should("be.visible");
-      cy.contains("div, button, span", "2018", { timeout: 5000 })
-        .scrollIntoView()
-        .click({ force: true });
-      cy.get("body").click(0, 0, { force: true });
+      cy.get('button[role="combobox"]').eq(1).click();
 
-      cy.contains(
-        "label",
-        "Você considera a Igreja Zion como sua igreja local?"
-      ).should("be.visible");
-      cy.get('span[id="belongs-to-organization-yes"]').click();
-      cy.get('div[id="year-joined-organization-picker"]').click();
-      cy.get('button[role="combobox"]').should("be.visible").click();
-      cy.get(
-        '[role="listbox"], [data-radix-popper-content], [aria-labelledby]'
-      ).should("be.visible");
-      cy.contains("div, button, span", "2019", { timeout: 5000 })
-        .scrollIntoView()
-        .click({ force: true });
+      cy.window().then((win) => {
+        const blocked = win.document.querySelector('span[style*="pointer-events: none"]');
+        if (blocked) blocked.style.pointerEvents = 'auto';
+
+        const option = [...win.document.querySelectorAll('[role="option"], span, div, button')]
+          .find(el => el.textContent.trim() === '2017');
+
+        if (option) {
+          option.click();
+          option.dispatchEvent(new win.Event('change', { bubbles: true }));
+        }
+      });
       cy.get("body").click(0, 0, { force: true });
-      cy.contains("Próximo").click();
+      cy.get('button[role="combobox"]', { timeout: 5000 }).should('contain.text', '2017');
+  
+
+      cy.contains("label","Você considera a Igreja Zion como sua igreja local?").should("be.visible");
+      cy.get('span[id="belongs-to-organization-yes"]').click();
+      cy.get('button[role="combobox"]').eq(2).click();
+      
+      cy.window().then((win) => {
+        const blocked = win.document.querySelector('span[style*="pointer-events: none"]');
+        if (blocked) blocked.style.pointerEvents = 'auto';
+
+        const option = [...win.document.querySelectorAll('[role="option"], span, div, button')]
+          .find(el => el.textContent.trim() === '2019');
+
+        if (option) {
+          option.click(); 
+          option.dispatchEvent(new win.Event('change', { bubbles: true }));
+        }
+      });
+      cy.get('body').click(0, 0, { force: true });
+      cy.get('button[role="combobox"]').should('contain.text', '2019');
+      cy.contains('Próximo').click()
 
       cy.contains("h1", "O que você tem buscado recentemente?").should(
         "be.visible"
@@ -158,7 +169,7 @@ Cypress.Commands.add('registerUser', () => {
       cy.get('#passwordRepeated').type('Teste@132')
       cy.get('#terms').click()
       cy.get('button[type="submit"]').click()
-    });
+       });
 })
 
 Cypress.Commands.add('selectCountry', (country) => {
