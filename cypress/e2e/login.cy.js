@@ -32,4 +32,10 @@ describe("Tela de login", () => {
     cy.contains('Conta criada, com sucesso!').should('be.visible')
     cy.url().should("be.equal", `${Cypress.config("baseUrl")}/sign-in`);
   });
+  it('Esqueci minha senha', () =>{
+    cy.contains('Esqueceu sua senha?').click()
+    cy.contains('h1', 'Redefinir senha').should('be.visible')
+    cy.get('#username').type(Cypress.env('user_data')['user_name_change'])
+    cy.contains('Próximo').click();
+  })
 });

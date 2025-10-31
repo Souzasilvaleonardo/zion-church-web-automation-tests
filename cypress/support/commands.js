@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 
 Cypress.Commands.add('login', (country = 'br', user, password) => {
   // monta as chaves dinamicamente com base no país
-  const envUser = Cypress.env(`user_name_${country}`)
-  const envPassword = Cypress.env(`user_password_${country}`)
+  const envUser = Cypress.env('user_data')[`user_name_${country}`]
+  const envPassword = Cypress.env('user_data')[`user_password_${country}`]
 
   // usa o parâmetro passado OU o valor do env
   const finalUser = user || envUser
