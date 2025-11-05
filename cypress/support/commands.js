@@ -46,7 +46,7 @@ Cypress.Commands.add('registerUser', () => {
       cy.get("#fullname").type(nameFaker);
       cy.get("#phone").type(numberFaker);
       cy.contains("Masculino").click();
-      cy.calendar("1994", "3", "10");
+      cy.calendarBirthdate("1994", "3", "10");
       cy.get("#birthdate").invoke("val").should("not.be.empty");
       cy.selectMaritalStatus("MARRIED");
       cy.contains("Próximo").click();
@@ -197,8 +197,15 @@ Cypress.Commands.add('selectMaritalStatus', (maritalStatus) => {
   cy.get('body').click(0, 0, { force: true })
 })
 
-Cypress.Commands.add('calendar', (year, month, day) => {
+Cypress.Commands.add('calendarBirthdate', (year, month, day) => {
     cy.get('#birthdate').click()//type('04 de out. de 1994', { force:true })
+    cy.get('select[aria-label="Choose the Year"]').select(year)
+    cy.get('select[aria-label="Choose the Month"]').select(month)
+    cy.get(`button[data-day="4/${day}/${year}"]`).click() 
+})
+
+Cypress.Commands.add('calendarBatizimoAgua', (year, month, day) => {
+    cy.get('#baptismYear').click()//type('04 de out. de 1994', { force:true })
     cy.get('select[aria-label="Choose the Year"]').select(year)
     cy.get('select[aria-label="Choose the Month"]').select(month)
     cy.get(`button[data-day="4/${day}/${year}"]`).click() 
