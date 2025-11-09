@@ -25,10 +25,11 @@ Cypress.Commands.add('logout', () => {
 })
 
 Cypress.Commands.add('registerUser', () => {
-        const emailFaker = faker.internet.email({ firstName: "teste" });
+    const emailFaker = faker.internet.email({ firstName: "teste" });
     const nameFaker = faker.person.fullName({ firstName: "teste" });
-    const numberFaker = faker.phone.number("(##) 9####-####");
-    cy.generateCPF().then((cpf) => {
+    // const numberFaker = faker.phone.number("(##) 9####-####");
+    // const numberFaker = `+55${faker.phone.number('9####-####')}`;
+      cy.generateCPF().then((cpf) => {
       cy.log("CPF gerado:", cpf);
 
       cy.contains("Cadastrar").click();
@@ -44,7 +45,9 @@ Cypress.Commands.add('registerUser', () => {
 
       cy.contains("h1", "Conte-nos um pouco mais sobre você.").should("be.visible");
       cy.get("#fullname").type(nameFaker);
-      cy.get("#phone").type(numberFaker);
+      cy.generateBrazilPhone({ ddd: '11', formatted: true }).then(phone => {
+        cy.get('#phone').clear().type(phone.formatted);
+      });
       cy.contains("Masculino").click();
       cy.calendarBirthdate("1994", "3", "10");
       cy.get("#birthdate").invoke("val").should("not.be.empty");
@@ -152,7 +155,7 @@ Cypress.Commands.add('registerUser', () => {
 
       cy.contains('h1', 'Agora, capricha na foto!').should('be.visible')
       cy.get('input[type="file"]')
-        .selectFile('cypress/fixtures/avatar.jpg', { force:true })
+        .selectFile('cypress/fixtures/avatar.jpg')
         .should((input) => {
           expect(input[0].files[0].name).to.equal('avatar.jpg')
         })
@@ -210,3 +213,28 @@ Cypress.Commands.add('calendarBatizimoAgua', (year, month, day) => {
     cy.get('select[aria-label="Choose the Month"]').select(month)
     cy.get(`button[data-day="4/${day}/${year}"]`).click() 
 })
+
+Cypress.Commands.add('generateBrazilPhone', (opts = {}) => {
+  // opts = { ddd: '11', formatted: true }
+  const ddd = (opts.ddd || '11').toString().padStart(2, '0'); // garante 2 dígitos
+  const formatted = typeof opts.formatted === 'boolean' ? opts.formatted : true;
+
+  // Gera 8 dígitos aleatórios e garante o primeiro dígito '9'
+  const eightDigits = faker.string.numeric(8); // ex: '29522272'
+  const localNumber = '9' + eightDigits;      // '929522272' (9 + 8 dígitos)
+
+  const phoneUnformatted = `+55${ddd}${localNumber}`; // ex: +5511929522272
+  // formata para (DD) 9XXXX-XXXX
+  const phoneFormatted = `(${ddd}) ${localNumber.slice(0, 5)}-${localNumber.slice(5)}`;
+
+  // objeto de retorno contendo ambos
+  const result = {
+    raw: phoneUnformatted,
+    formatted: phoneFormatted,
+    ddd,
+    localNumber
+  };
+
+  // devolve via cy.wrap para usar com .then(...) no fluxo Cypress
+  return cy.wrap(result);
+});

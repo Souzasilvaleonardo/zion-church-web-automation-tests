@@ -1,3 +1,6 @@
+import { faker } from '@faker-js/faker';
+import 'cypress-file-upload';
+
 describe('Perfil Pessoal Geral', () => {
       beforeEach(() => {
     cy.visit("/sign-in");
@@ -8,34 +11,11 @@ describe('Perfil Pessoal Geral', () => {
     cy.login();
     cy.get('img[alt="Usuário"]').click()
 
-    cy.contains('Meu Perfil').click()
-    cy.contains('h2', 'Dados Pessoais').should('be.visible')
+    cy.updatePersonalInformation()
 
-    cy.get('#edit-personal-information-button').click()
-    cy.contains('h2', 'Dados Pessoais').should('be.visible')
-
-    cy.get('#fullname').clear()
-    cy.get('#fullname').type('Jesus Cristo')
-    cy.get('#maritalStatus').click()
-          cy.window().then((win) => {
-        const blocked = win.document.querySelector('span[style*="pointer-events: none"]');
-        if (blocked) blocked.style.pointerEvents = 'auto';
-
-        const option = [...win.document.querySelectorAll('[role="option"], span, div, button')]
-          .find(el => el.textContent.trim() === 'Solteiro(a)');
-
-        if (option) {
-          option.click();
-          option.dispatchEvent(new win.Event('change', { bubbles: true }));
-        }
-      });
-      cy.get("body").click(0, 0, { force: true });
-      cy.contains('Solteiro(a)').should('be.visible')
-      cy.contains('Confirmar').click()
-
-      cy.contains('Perfil atualizado com sucesso!').should('be.visible')
+    cy.contains('Perfil atualizado com sucesso!').should('be.visible') 
   })
-  it('Edição de dado eclesiaticos', () => {
+  it.only('Edição de dado eclesiaticos', () => {
     cy.login();
     cy.get('img[alt="Usuário"]').click()
 
@@ -45,24 +25,14 @@ describe('Perfil Pessoal Geral', () => {
     cy.get('#edit-spiritual-information-button').click()
     cy.contains('h2', 'Dados eclesiásticos').should('be.visible')
 
-    cy.get('button[data-state="checked"]').eq(1)
-      .click()
-    cy.get('button[data-state="unchecked"]').should('be.visible')
-
-    cy.get('button[data-state="unchecked"]').click()
-    cy.get('button[data-state="checked"]')
-      .eq(1)
-      .should('be.visible')
-    cy.calendarBatizimoAgua("1994", "3", "10")
-
-    cy.get('#churchOrigin').clear()
-    cy.get('#churchOrigin').type('Igreja Judaica Messia')
-
-    cy.contains('Confirmar').click()
+    cy.editEcclesiasticalData()
 
     cy.contains('Perfil atualizado com sucesso!').should('be.visible')
+    //Incompleto precisa terminar
   })
-  it.only('Edição de Dados de Contato', () => {
+  it('Edição de Dados de Contato', () => {
+    const email = faker.internet.email({firstName: 'jesus'})
+    
     cy.login();
     cy.get('img[alt="Usuário"]').click()
 
@@ -72,5 +42,40 @@ describe('Perfil Pessoal Geral', () => {
     cy.get('#edit-contact-information-button').click()
     cy.contains('h2', 'Dados de contato').should('be.visible')
 
+    cy.get('#email').clear()
+    cy.get('#email').type(email)
+
+    cy.contains('Confirmar').click()
+
+    //necessário terminar
+
+  })
+it('Edição de Familiares', () => {
+  cy.login();
+  cy.get('img[alt="Usuário"]').click();
+
+  cy.contains('Meu Perfil').click();
+  cy.contains('h2', 'Dados Pessoais', 'Familiares').should('be.visible');
+
+  cy.get('button[data-testid="profile-family-information-add-button"]').click();
+  cy.contains('h2', 'Dados familiares').should('be.visible');
+
+  cy.editFamilyMembers()
+  
+  cy.contains('Familiar removido com sucesso!').should('be.visible')
+  });
+  it('Edição de documentos', () => {
+  cy.login();
+  cy.get('img[alt="Usuário"]').click();
+
+  cy.contains('Meu Perfil').click();
+  cy.contains('h2', 'Dados Pessoais','Documentos').should('be.visible');
+
+  cy.get('button[data-testid="profile-document-information-add-button"]').click()
+  cy.contains('h2', 'Dados de documento').should('be.visible')
+
+  cy.editDocuments()
+
+  cy.contains('Documento removido com sucesso!').should('be.visible')
   })
 })
