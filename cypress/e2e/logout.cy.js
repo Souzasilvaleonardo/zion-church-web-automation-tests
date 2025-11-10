@@ -3,7 +3,7 @@ describe('logout', () => {
     cy.visit('/sign-in')
     cy.wait(1000)
   })
-  it.only('successfully', () => {
+  it('successfully', () => {
     cy.login() // session reutiliza login
 
     cy.logout()

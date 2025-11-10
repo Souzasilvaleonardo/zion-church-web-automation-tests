@@ -27,8 +27,6 @@ Cypress.Commands.add('logout', () => {
 Cypress.Commands.add('registerUser', () => {
     const emailFaker = faker.internet.email({ firstName: "teste" });
     const nameFaker = faker.person.fullName({ firstName: "teste" });
-    // const numberFaker = faker.phone.number("(##) 9####-####");
-    // const numberFaker = `+55${faker.phone.number('9####-####')}`;
       cy.generateCPF().then((cpf) => {
       cy.log("CPF gerado:", cpf);
 
@@ -155,7 +153,7 @@ Cypress.Commands.add('registerUser', () => {
 
       cy.contains('h1', 'Agora, capricha na foto!').should('be.visible')
       cy.get('input[type="file"]')
-        .selectFile('cypress/fixtures/avatar.jpg')
+        .selectFile('cypress/fixtures/avatar.jpg', { force:true })
         .should((input) => {
           expect(input[0].files[0].name).to.equal('avatar.jpg')
         })

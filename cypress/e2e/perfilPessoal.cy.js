@@ -15,7 +15,7 @@ describe('Perfil Pessoal Geral', () => {
 
     cy.contains('Perfil atualizado com sucesso!').should('be.visible') 
   })
-  it.only('Edição de dado eclesiaticos', () => {
+  it('Edição de dado eclesiaticos', () => {
     cy.login();
     cy.get('img[alt="Usuário"]').click()
 
