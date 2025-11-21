@@ -3,8 +3,8 @@ import 'cypress-file-upload';
 
 describe('Perfil Pessoal Geral', () => {
       beforeEach(() => {
-    cy.visit("/sign-in");
-    cy.wait(1000);
+        cy.visit("/sign-in");
+        cy.wait(1000);
   });
 
   it('Edição de dados pessoais', () => {

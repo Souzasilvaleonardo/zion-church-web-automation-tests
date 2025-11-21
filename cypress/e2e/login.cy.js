@@ -26,7 +26,7 @@ describe("Tela de login", () => {
       "As credenciais que você digitou são inválidas. Tente novamente."
     ).should("be.visible");
   });
-  it("Cadastrar novo usuário BR", () => {
+  it.only("Cadastrar novo usuário BR", () => {
     cy.registerUser()
     
     cy.contains('Conta criada, com sucesso!').should('be.visible')
