@@ -2,7 +2,8 @@
   "scripts": {
     "cy:open": "cypress open",
     "test": "cypress run",
-    "test:cloud": "cypress run --record"
+    "test:cloud": "cypress run --record",
+    "test:cloud:open": "cypress open"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",

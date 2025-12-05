@@ -5,7 +5,7 @@ describe("Tela de login", () => {
     cy.visit("/sign-in");
     cy.wait(1000);
   });
-  it("Login successfully", () => {
+  it.only("Login successfully", () => {
     cy.login();
 
     cy.url().should("be.equal", `${Cypress.config("baseUrl")}/home`);
@@ -26,7 +26,7 @@ describe("Tela de login", () => {
       "As credenciais que você digitou são inválidas. Tente novamente."
     ).should("be.visible");
   });
-  it.only("Cadastrar novo usuário BR", () => {
+  it("Cadastrar novo usuário BR", () => {
     cy.registerUser()
     
     cy.contains('Conta criada, com sucesso!').should('be.visible')

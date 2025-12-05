@@ -13,8 +13,8 @@ Cypress.Commands.add('login', (country = 'br', user, password) => {
     throw new Error(`⚠️ Credenciais ausentes para o país: ${country}`)
   }
   cy.prompt([
-    'type {{finalUser}} in the Documento field',
-    'type {{finalPassword}} in the Senha field',
+    `type ${finalUser} in the Documento field`,
+    `type ${finalPassword} in the Senha field`,
     'click the Entrar button'
   ])
 
