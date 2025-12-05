@@ -46,6 +46,6 @@ describe('Zion Campus', () => {
         cy.contains('Campus atualizado com sucesso').should('be.visible')
     })
     it('', () => {
-        
+
     })
 })

@@ -12,11 +12,16 @@ Cypress.Commands.add('login', (country = 'br', user, password) => {
   if (!finalUser || !finalPassword) {
     throw new Error(`⚠️ Credenciais ausentes para o país: ${country}`)
   }
+  cy.prompt([
+    'type {{finalUser}} in the Documento field',
+    'type {{finalPassword}} in the Senha field',
+    'click the Entrar button'
+  ])
 
-  cy.get('input[data-testid="sign-in-username-input"]').type(finalUser)
-  cy.get('#password').type(finalPassword, { log: false })
+  // cy.get('input[data-testid="sign-in-username-input"]').type(finalUser)
+  // cy.get('#password').type(finalPassword, { log: false })
 
-  cy.contains('Entrar').click()
+  // cy.contains('Entrar').click()
 })
 
 Cypress.Commands.add('logout', () => {
