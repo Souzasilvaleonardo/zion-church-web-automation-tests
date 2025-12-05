@@ -5,7 +5,7 @@ describe("Tela de login", () => {
     cy.visit("/sign-in");
     cy.wait(1000);
   });
-  it.only("Login successfully", () => {
+  it("Login successfully", () => {
     cy.login();
 
     cy.url().should("be.equal", `${Cypress.config("baseUrl")}/home`);
